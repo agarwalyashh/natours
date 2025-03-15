@@ -3,6 +3,13 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 const app = require("./index");
 
+
+process.on("uncaughtRejection", (err) => {
+  console.log("UNCAUGHT REJECTION! Shutting down...");
+  console.log(err.name, err.message);
+    process.exit(1);
+});
+
 // app.get("env") = development by default
 // process.env -> lots of env variables set by nodejs by default
 
@@ -18,6 +25,14 @@ mongoose
   });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
+const server=app.listen(port, () => {
   console.log(`App running on port ${port}`);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.log("UNHANDLED REJECTION! Shutting down...");
+  console.log(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
 });

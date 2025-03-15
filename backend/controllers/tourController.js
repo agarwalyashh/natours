@@ -1,4 +1,5 @@
 const Tour = require("./../models/tourModels");
+const AppError=require("../utils/error")
 
 exports.alias=(req,res,next)=>{
   req.query.limit="5";
@@ -6,7 +7,7 @@ exports.alias=(req,res,next)=>{
   next()
 }
 
-exports.createTour = async (req, res) => {
+exports.createTour = async (req, res,next) => {
   try {
     const newTour = await Tour.create(req.body);
     res.status(201).json({
@@ -16,17 +17,20 @@ exports.createTour = async (req, res) => {
       },
     });
   } catch (err) {
-    console.log(err);
-    res.status(400).json({
-      status: "failed",
-      message: "Invalid Data Sent",
-    });
+    // res.status(400).json({
+    //   status: "failed",
+    //   message: "Invalid Data Sent",
+    // });
+    next(new AppError(err.message,400,err)) 
+    // so whenever an error occurs, catch block is executed, which calls next with instance of AppError which extends Error class and fills in the data, and then the error middleware is executed which calls the errorController and sends the response
   }
 };
 
-exports.getTour = async (req, res) => {
+exports.getTour = async (req, res,next) => {
   try {
     const tour = await Tour.findById(req.params.id);
+    if(!tour)
+      return next(new Error('Tour not found',404))
     // Tour.findById is same as Tour.findOne({_id:req.params.id})
     res.status(200).json({
       status: "success",
@@ -35,10 +39,10 @@ exports.getTour = async (req, res) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    next(new AppError(err.message,404,err))
   }
 };
-exports.getAllTours = async (req, res) => {
+exports.getAllTours = async (req, res,next) => {
   try {
     const queryObj = { ...req.query };
     const exclude = ["page", "sort", "limit", "fields"];
@@ -86,18 +90,17 @@ exports.getAllTours = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(404).json({
-      status: "failed",
-      message: "No Tours Found",
-    });
+    next(new AppError(err.message,400))
   }
 };
-exports.updateTour = async (req, res) => {
+exports.updateTour = async (req, res,next) => {
   try {
     const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
+    if(!tour)
+      return next(new Error('Tour not found',404))
     res.status(200).json({
       status: "success",
       data: {
@@ -105,23 +108,26 @@ exports.updateTour = async (req, res) => {
       },
     });
   } catch (err) {
-    console.log(err);
+    next(new AppError(err.message,400,err))
   }
 };
 exports.deleteTour = async (req, res) => {
   try {
-    await Tour.findByIdAndDelete(req.params.id);
+    const tour=await Tour.findByIdAndDelete(req.params.id);
+    if(!tour)
+      return next(new Error('Tour not found',404))
     res.status(204).json({
       status: "success",
       data: null,
     });
+    
   } catch (err) {
-    console.log(err);
+    next(new AppError(err.message,400))
   }
 };
 
 
-exports.getTourStats=async (req,res)=>{
+exports.getTourStats=async (req,res,err)=>{
   try{
     const stats=await Tour.aggregate([ //Creates a pipeline
       {
@@ -159,7 +165,7 @@ exports.getTourStats=async (req,res)=>{
   }
   catch(err)
   {
-    console.log(err)
+    next(new AppError(err.message,400))
   }
 }
 
@@ -204,6 +210,6 @@ exports.getMonthlyPlan=async (req,res)=>{
     })
   }
   catch(err){
-    console.log(err)
+    next(new AppError(err.message,400))
   }
 }

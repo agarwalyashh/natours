@@ -1,10 +1,15 @@
 const mongoose = require("mongoose");
+const slugify=require("slugify")
 const tourSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Tour must have a name"],
     unique: true,
-    trim: true
+    trim: true,
+    maxLength:[30,"Tour name must have less than or equal to 30 characters"]
+  },
+  slug:{
+    type:String
   },
   duration:{
     type:Number,
@@ -16,11 +21,14 @@ const tourSchema = new mongoose.Schema({
   },
   difficulty:{
     type:String,
-    required:[true,"Tour must have a difficulty"]
+    required:[true,"Tour must have a difficulty"],
+    enum:{values:["easy","medium","difficult"],message:"Difficulty must be easy,medium or difficult"}
   },
   ratingsAverage: {
     type: Number,
     default: 4.5,
+    min:[1,"Ratings must be between 1 to 5"],
+    max:[5,"Ratings must be between 1 to 5"],
   },
   ratingsQuantity:{
     type:Number,
@@ -32,6 +40,15 @@ const tourSchema = new mongoose.Schema({
   },
   priceDiscount:{
     type:Number,
+    validate:{
+      validator:function(val){
+        // NOTE - this keyword here works only for creating and not updating (by Mongoose)
+        if(this.price<priceDiscount)
+          return false;
+        return true;
+      },
+      message:"Discount price must be less than the actual price",
+    }
   },
   summary:{
     type:String,
@@ -56,9 +73,52 @@ const tourSchema = new mongoose.Schema({
   },
   startDates:{
     type:[Date]
+  },
+  secretTour:{
+    type:Boolean,
+    default:false
   }
+},{ // for virtual properties
+  toJSON:{virtuals:true},
+  toObject:{virtuals:true}
 });
 
+// MONGOOSE MIDDLEWARE-->
+
+// pre & post DOCUMENT middleware runs before the .save() and .create()
+tourSchema.pre('save',function(next){
+  // console.log(this); // this is the entire object sent as a post request before the document is saved into the database
+  this.slug=slugify(this.name,{lower:true})
+  next()
+})
+
+// tourSchema.post('save',function(doc,next){
+//   console.log(doc); // doc is the entire object after the document is saved into the database
+//   next()
+// })
+
+// Query Middleware-
+tourSchema.pre('find',function(next){
+  this.find({secretTour:{$ne:true}}) // here, the this keyword points to the query which is going to be executed
+  next()
+})
+tourSchema.pre('findOne',function(next){
+  this.find({secretTour:{$ne:true}})
+  next()
+})
+
+
+//Aggregation middleware-
+tourSchema.pre('aggregate',function(next){
+  this.pipeline().unshift({$match:{secretTour:{$ne:true}}})
+  next()
+})
+
+
+tourSchema.virtual("durationInWeeks").get(function(){ // virtual properties are not stored in databases. These are properties which can
+  // be easily found out with the help of existing ones
+  return this.duration/7;
+})
 const Tour = mongoose.model("Tour", tourSchema);
 module.exports = Tour;
 
