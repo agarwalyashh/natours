@@ -11,6 +11,12 @@ function handleValidationErrorDB(err){
     const message="Invalid input data"
     return new AppError(message,400)
 }
+function handleJWTError(err){
+  return new AppError("Invalid Token. Please Login Again",401)
+}
+function handleExpiredError(err){
+  return new AppError("Please Login Again",401)
+}
 module.exports = (err, req, res, next) => {
   // Middleware for error handling automatically detected by express
   err.statusCode = err.statusCode || 500;
@@ -35,6 +41,12 @@ module.exports = (err, req, res, next) => {
     if(err.name==="ValidationError"){
         error=handleValidationErrorDB(err);
     }
+    if(err.name==="JsonWebTokenError"){
+      error=handleJWTError(err);
+  }
+  if(err.name==="TokenExpiredError"){
+    error=handleExpiredError(err);
+}
     if (error.isOperational) {
       // errors which we have handled, and we know about them(isOperational is updated inside AppError)
       res.status(error.statusCode).json({
