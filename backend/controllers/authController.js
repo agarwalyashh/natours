@@ -21,7 +21,7 @@ exports.signup = async (req, res, next) => {
       secure:true,
       httpOnly:true
     })
-    user.password = undefined
+    newUser.password = undefined
     res.status(201).json({
       status: "success",
       token,
@@ -228,5 +228,7 @@ exports.updatePassword = async (req, res, next) => {
       status: "success",
       token: token,
     });
-  } catch (err) {}
+  } catch (err) {
+    next(new AppError(err.message,400,err))
+  }
 };
