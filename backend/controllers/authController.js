@@ -18,7 +18,7 @@ exports.signup = async (req, res, next) => {
     
     res.cookie("jwt",token,{
       expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES_IN*24*60*60*1000),
-      secure:true,
+      secure:process.env.NODE_ENV === "production",
       httpOnly:true
     })
     newUser.password = undefined
@@ -52,7 +52,7 @@ exports.login = async (req, res, next) => {
 
     res.cookie("jwt",token,{
       expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES_IN*24*60*60*1000),
-      secure:true,
+      secure:process.env.NODE_ENV === "production",
       httpOnly:true
     })
     user.password = undefined
@@ -105,7 +105,9 @@ exports.protect = async (req, res, next) => {
       );
     req.user = currentUser;
     next();
-  } catch (err) {}
+  } catch (err) {
+    next(new AppError(err.message,400,err))
+  }
 };
 
 exports.restrictTo = (...roles) => {
@@ -185,7 +187,7 @@ exports.resetPassword = async (req, res, next) => {
     
     res.cookie("jwt",token,{
       expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES_IN*24*60*60*1000),
-      secure:true,
+      secure:process.env.NODE_ENV === "production",
       httpOnly:true
     })
     user.password = undefined
@@ -220,7 +222,7 @@ exports.updatePassword = async (req, res, next) => {
     
     res.cookie("jwt",token,{
       expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES_IN*24*60*60*1000),
-      secure:true,
+      secure:process.env.NODE_ENV === "production",
       httpOnly:true
     })
     user.password = undefined

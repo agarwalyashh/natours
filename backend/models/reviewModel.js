@@ -31,7 +31,9 @@ const reviewSchema = new mongoose.Schema(
     // for virtual properties
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+    // timestamp
+    timestamps: true,
+  },
 );
 
 reviewSchema.index({ tour: 1, user: 1 }, { unique: true }); // In this way, one user can give only one review for a particular tour

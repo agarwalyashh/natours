@@ -17,10 +17,6 @@ exports.createTour = async (req, res, next) => {
       },
     });
   } catch (err) {
-    // res.status(400).json({
-    //   status: "failed",
-    //   message: "Invalid Data Sent",
-    // });
     next(new AppError(err.message, 400, err));
     // so whenever an error occurs, catch block is executed, which calls next with instance of AppError which extends Error class and fills in the data, and then the error middleware is executed which calls the errorController and sends the response
   }
@@ -38,7 +34,6 @@ exports.getTour = async (req, res, next) => {
         select: "review rating",
       }); // populate helps to get data inside the parent document. Looks like embedding but it might not be
     if (!tour) return next(new Error("Tour not found", 404));
-    // Tour.findById is same as Tour.findOne({_id:req.params.id})
     res.status(200).json({
       status: "success",
       data: {

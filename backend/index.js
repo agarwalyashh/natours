@@ -50,10 +50,6 @@ app.use("/api/v1/reviews",reviewRouter);
 
 // If we reach here, means no response was sent till now, therefore there might be somethign wrong with the route
 app.all("*", (req, res, next) => {
-  // res.status(404).json({
-  //     status:"fail",
-  //     message:`Can't find original ${req.originalUrl} on this server`
-  // })
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404)); // whenever an argument is passed inside next, it directly calls error handler
 });
 

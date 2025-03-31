@@ -7,7 +7,7 @@ const router = express.Router();
 // router.param('id',tourController.checkID)
 router
   .route("/top-5-cheap")
-  .get(tourController.alias, tourController.getAllTours); // Aliasing the route
+  .get(tourController.alias, tourController.getAllTours);
 router.route("/tour-stats").get(tourController.getTourStats);
 router
   .route("/tours-within/:distance/center/:latlng/unit/:unit")
@@ -41,7 +41,6 @@ router
     authController.restrictTo("admin", "lead-guide"),
     tourController.createTour
   );
-// .post(tourController.checkBody,tourController.createTour); //checkBody is a middleware
 
 router.use("/:tourId/reviews", reviewRouter);
 module.exports = router;

@@ -59,6 +59,9 @@ const userSchema=new mongoose.Schema({
         default:true,
         select:false
     }
+},
+{
+    timestamps:true
 })
 
 userSchema.pre("save",async function(next){
@@ -66,13 +69,9 @@ userSchema.pre("save",async function(next){
         return next();
     this.password = await bcrypt.hash(this.password,12)
     this.passwordConfirm = undefined 
-    next()
-})
 
-userSchema.pre("save",function(next){
-    if(!this.isModified("password")||this.isNew)
-        return next()
-    this.passwordChangedAt = Date.now()-1000;
+    if(!this.isNew) // if user is old one, update passwordChangedAt
+        this.passwordChangedAt = Date.now()-1000;
     next()
 })
 
@@ -93,9 +92,9 @@ userSchema.methods.changedPasswordAfter = function(JWTTimestamp){
 }
 
 userSchema.methods.createPasswordResetToken = function(){
-    const resetToken = crypto.randomBytes(32).toString('hex')
-    this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
-    this.passwordResetExpires = Date.now() + 10*60*1000;
+    const resetToken = crypto.randomBytes(32).toString('hex') // creates 32 byte random value and converts to hex
+    this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex'); // hashes the token and converts to hex
+    this.passwordResetExpires = Date.now() + 10*60*1000; // sets token expiry
     return resetToken
 }
 const User=mongoose.model("User",userSchema)

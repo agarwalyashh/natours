@@ -127,7 +127,9 @@ const tourSchema = new mongoose.Schema(
     // for virtual properties
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
-  }
+
+    timestamps:true
+  },
 );
 
 // tourSchema.index({price:1}) // sort price in ascending order. Indexing helps in improving read performance
