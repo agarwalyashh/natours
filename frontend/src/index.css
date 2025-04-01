@@ -1,1 +1,11 @@
-@import "tailwindcss"
+@import "tailwindcss";
+
+@theme{
+    --color-primary-green: #55c57c;
+    --color-grey: #777;
+    --color-primary-red: #eb4d4b;
+    --color-primary-green-hover: #7dd56f;
+}
+.clip-path-trapezoid {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 0% 100%);
+}

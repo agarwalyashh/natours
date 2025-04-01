@@ -53,5 +53,12 @@ app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404)); // whenever an argument is passed inside next, it directly calls error handler
 });
 
+const cors = require("cors");
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
+
+
 app.use(errorController);
 module.exports = app;

@@ -4,7 +4,7 @@ dotenv.config({ path: "./config.env" });
 const app = require("./index");
 
 
-process.on("uncaughtRejection", (err) => {
+process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT REJECTION! Shutting down...");
   console.log(err.name, err.message);
     process.exit(1);
