@@ -7,6 +7,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
+const cors = require("cors");
 
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
@@ -44,6 +45,11 @@ app.use(
   })
 );
 
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
+
 app.use("/api/v1/tours", tourRouter); // Called Mounting a new router on a route(given url)
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/reviews",reviewRouter);
@@ -53,11 +59,6 @@ app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404)); // whenever an argument is passed inside next, it directly calls error handler
 });
 
-const cors = require("cors");
-app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true
-}));
 
 
 app.use(errorController);

@@ -21,6 +21,7 @@
     "start:prod": "cross-env NODE_ENV=production nodemon backend/server.js"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.71.1",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",

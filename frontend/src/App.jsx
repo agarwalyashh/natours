@@ -1,14 +1,30 @@
-import Footer from "../components/Footer"
-import Navbar from "../components/Navbar"
-import Tours from "../components/Tours"
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
+import AppLayout from "../components/AppLayout";
+import Error from "../components/Error";
+import Tours from "../components/Tours";
 
-function App(){
-  return (
-    <div className="text-center">
-      <Navbar/>
-      <Tours/>
-      <Footer/>
-    </div>
-  )
+function App() {
+  const router = createBrowserRouter([
+    {
+      path: "/",
+      element: <AppLayout />,
+      errorElement: <Error />,
+      children: [
+        {
+          path: "tours",
+          element: <Tours />,
+        },
+        {
+          element: <Navigate to="tours" replace />,
+          index: true,
+        },
+      ],
+    },
+  ]);
+  return <RouterProvider router={router}></RouterProvider>;
 }
-export default App
+export default App;
