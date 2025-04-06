@@ -1,13 +1,18 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 @theme{
     --color-primary-green: #55c57c;
     --color-grey: #777;
     --color-primary-red: #eb4d4b;
     --color-primary-green-hover: #7dd56f;
+    --color-secondary-green: #4ade80;
 }
 .clip-path-trapezoid {
   clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 0% 100%);
+}
+.clip-path-trapezoid-img {
+  clip-path: polygon(0% 8%, 100% 0%, 100% 92%, 0% 100%);
 }
 .spinner-7 {
   width: 50px;

@@ -1,13 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import Tour from "./Tour";
-import Loading from "./Loading";
-
-async function getTours() {
-  const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/tours`);
-  if (!res.ok) throw new Error("Failed to fetch tours.");
-  const jsonResponse = await res.json();
-  return jsonResponse.data.tours;
-}
+import Loading from "../../components/Loading";
+import {getTours} from "../../services/apiTours";
 function Tours() {
   const {data:tours=[],isLoading,isError} = useQuery({
     queryKey:["tours"],
@@ -19,7 +13,7 @@ function Tours() {
     return <h1 className="text-2xl sm:text-3xl lg:text-4xl text-center">Tours could not be fetched.</h1>
 
   return (
-    <main className="px-40 py-10 mx-auto grid grid-cols-3 gap-10">
+    <main className="px-6 sm:py-30 lg:px-40 py-6 mx-auto grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6 xl:gap-10">
       {tours.map((tour) => (
         <Tour key={tour.id} tour={tour} />
       ))}

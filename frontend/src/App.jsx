@@ -5,7 +5,8 @@ import {
 } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import Error from "../components/Error";
-import Tours from "../components/Tours";
+import TourDetails from "../features/tour/TourDetails";
+import Tours from "../features/tour/Tours";
 
 function App() {
   const router = createBrowserRouter([
@@ -17,6 +18,10 @@ function App() {
         {
           path: "tours",
           element: <Tours />,
+        },
+        {
+          path:"tours/:tourId",
+          element:<TourDetails/>
         },
         {
           element: <Navigate to="tours" replace />,
