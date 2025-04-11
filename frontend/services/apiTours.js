@@ -1,15 +1,37 @@
 export async function getTours() {
-  const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/tours`);
-  if (!res.ok) throw new Error("Failed to fetch tours.");
-  const jsonResponse = await res.json();
-  return jsonResponse.data.tours;
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/api/v1/tours`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+    if (!res.ok) throw new Error("Failed to fetch tours.");
+    const jsonResponse = await res.json();
+    return jsonResponse.data.tours;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
 }
 
 export async function getTour(id) {
-  const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/tours/${id}`);
-  if (!res.ok) throw new Error("Failed to fetch tours.");
-  const jsonResponse = await res.json();
-  return jsonResponse.data.tour;
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/api/v1/tours/${id}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+    if (!res.ok) throw new Error("Failed to fetch tours.");
+    const jsonResponse = await res.json();
+    return jsonResponse.data.tour;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
 }
 
 export const month = {

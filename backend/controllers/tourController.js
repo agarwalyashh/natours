@@ -31,7 +31,11 @@ exports.getTour = async (req, res, next) => {
       })
       .populate({
         path: "reviews",
-        select: "review rating",
+        select: "review rating user",
+        populate:{
+          path:"user",
+          select:"name"
+        }
       }); // populate helps to get data inside the parent document. Looks like embedding but it might not be
     if (!tour) return next(new Error("Tour not found", 404));
     res.status(200).json({

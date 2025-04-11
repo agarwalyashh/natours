@@ -15,13 +15,15 @@ exports.signup = async (req, res, next) => {
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
-    
-    res.cookie("jwt",token,{
-      expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES_IN*24*60*60*1000),
-      secure:process.env.NODE_ENV === "production",
-      httpOnly:true
-    })
-    newUser.password = undefined
+
+    res.cookie("jwt", token, {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+    });
+    newUser.password = undefined;
     res.status(201).json({
       status: "success",
       token,
@@ -33,6 +35,20 @@ exports.signup = async (req, res, next) => {
     next(new AppError(err.message, 400, err));
   }
 };
+
+exports.logout = async (req,res,next)=>{
+  try{
+    res.cookie("jwt","loggedOut",{
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true,
+    })
+    res.status(200).json({status:"success"})
+  }
+  catch(err){
+    console.log(err)
+    next(new AppError(err.message,400,err))
+  }
+}
 
 exports.login = async (req, res, next) => {
   try {
@@ -50,12 +66,14 @@ exports.login = async (req, res, next) => {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
 
-    res.cookie("jwt",token,{
-      expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES_IN*24*60*60*1000),
-      secure:process.env.NODE_ENV === "production",
-      httpOnly:true
-    })
-    user.password = undefined
+    res.cookie("jwt", token, {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+    });
+    user.password = undefined;
     res.status(200).json({
       status: "success",
       token: token,
@@ -75,6 +93,7 @@ exports.protect = async (req, res, next) => {
     )
       // We will pass header like this
       token = req.headers.authorization.split(" ")[1];
+    else if (req.cookies.jwt) token = req.cookies.jwt;
     if (!token)
       return next(
         new AppError("You are not logged in! Please log in to get access", 401)
@@ -106,7 +125,63 @@ exports.protect = async (req, res, next) => {
     req.user = currentUser;
     next();
   } catch (err) {
-    next(new AppError(err.message,400,err))
+    next(new AppError(err.message, 400, err));
+  }
+};
+
+exports.isLoggedIn = async (req, res, next) => {
+  try {
+    if (!req.cookies.jwt) {
+      return res.status(200).json({
+        status: 'success',
+        isLoggedIn: false
+      });
+    }
+
+    const token = req.cookies.jwt;
+    const decoded = await new Promise((resolve, reject) => {
+      jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(decodedToken);
+      });
+    }).catch(() => {
+      return null;
+    });
+
+    if (!decoded) {
+      return res.status(200).json({
+        status: 'success',
+        isLoggedIn: false
+      });
+    }
+
+    const currentUser = await User.findById(decoded.id);
+    if (!currentUser) {
+      return res.status(200).json({
+        status: 'success',
+        isLoggedIn: false
+      });
+    }
+
+    if (currentUser.changedPasswordAfter(decoded.iat)) {
+      return res.status(200).json({
+        status: 'success',
+        isLoggedIn: false
+      });
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      isLoggedIn: true,
+      user: currentUser
+    });
+  } catch (err) {
+    return res.status(200).json({
+      status: 'success',
+      isLoggedIn: false
+    });
   }
 };
 
@@ -184,13 +259,15 @@ exports.resetPassword = async (req, res, next) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
-    
-    res.cookie("jwt",token,{
-      expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES_IN*24*60*60*1000),
-      secure:process.env.NODE_ENV === "production",
-      httpOnly:true
-    })
-    user.password = undefined
+
+    res.cookie("jwt", token, {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+    });
+    user.password = undefined;
     res.status(200).json({
       status: "success",
       token: token,
@@ -211,26 +288,28 @@ exports.updatePassword = async (req, res, next) => {
       return next(new AppError("Incorrect password", 401));
 
     // 3. Update Password
-    user.password = req.body.password
-    user.passwordConfirm = req.body.passwordConfirm
+    user.password = req.body.password;
+    user.passwordConfirm = req.body.passwordConfirm;
     await user.save();
 
     // 4. Log user in, send JWT
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
-    
-    res.cookie("jwt",token,{
-      expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRES_IN*24*60*60*1000),
-      secure:process.env.NODE_ENV === "production",
-      httpOnly:true
-    })
-    user.password = undefined
+
+    res.cookie("jwt", token, {
+      expires: new Date(
+        Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      ),
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+    });
+    user.password = undefined;
     res.status(200).json({
       status: "success",
       token: token,
     });
   } catch (err) {
-    next(new AppError(err.message,400,err))
+    next(new AppError(err.message, 400, err));
   }
 };
