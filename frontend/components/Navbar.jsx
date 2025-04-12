@@ -25,7 +25,7 @@ function Navbar() {
 
   return (
     <nav className="flex bg-gray-600 text-white justify-between px-4 py-2 md:py-4 md:px-6 m-2 items-center text-xs md:text-sm lg:text-[16px]">
-      <p>ALL TOURS</p>
+      <p onClick={()=>navigate("/")} className="cursor-pointer">ALL TOURS</p>
       <img
         src={logo}
         alt="logo"
@@ -50,7 +50,7 @@ function Navbar() {
       )}
       {user && (
         <div className="flex md:gap-4 gap-2 items-center">
-          <p className="">
+          <p className="cursor-pointer" onClick={()=>navigate("me")}>
             Welcome,{" "}
             <span className="uppercase font-semibold">
               {user.name.split(" ")[0] || user.name}

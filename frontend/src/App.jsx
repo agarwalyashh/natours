@@ -13,6 +13,9 @@ import { AuthProvider } from "../context/authContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Signup from "../features/user/Signup";
+import Account from "../features/user/Account";
+import AccountDetails from "../features/user/AccountDetails";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,6 +52,24 @@ function App() {
           path: "signup",
           element: <Signup />,
         },
+        {
+          path: "me",
+          element: (
+            <ProtectedRoute>
+              <Account />
+            </ProtectedRoute>
+          ),
+          children: [
+            {
+              path: "settings",
+              element: <AccountDetails />,
+            },
+            {
+              element: <Navigate to="settings" replace />,
+              index: true,
+            },
+          ],
+        },
       ],
     },
   ]);
@@ -56,7 +77,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ToastContainer limit={2} hideProgressBar/>
+        <ToastContainer limit={2} hideProgressBar />
         <RouterProvider router={router} />
       </AuthProvider>
     </QueryClientProvider>

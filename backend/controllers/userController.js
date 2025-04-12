@@ -95,7 +95,7 @@ exports.updateMe = async (req, res, next) => {
 
 exports.deleteMe = async (req, res, next) => {
   try {
-    const user = await User.findByIdAndUpdate(req.user.id, { active: false });
+    const user = await User.findByIdAndDelete(req.user.id);
     res.status(204).json({
       status: "success",
       data: null,
