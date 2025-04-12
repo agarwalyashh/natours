@@ -10,7 +10,6 @@ function AuthProvider({ children }) {
     queryKey: ["login"],
     queryFn: isLoggedIn,
   });
-  console.log(data)
 
   if(isLoading)
     return <Loading/>

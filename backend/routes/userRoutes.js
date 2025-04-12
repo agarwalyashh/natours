@@ -13,7 +13,7 @@ router.route("/resetPassword/:token").patch(authController.resetPassword);
 router.use(authController.protect); // After this all routes are protected as this is a middleware
 
 router.route("/updateMyPassword").patch(authController.updatePassword);
-router.route("/updateMe").patch(userController.updateMe);
+router.route("/updateMe").patch(userController.uploadUserPhoto,userController.resizeUpserPhoto,userController.updateMe);
 router.route("/deleteMe").delete(userController.deleteMe);
 router.route("/getMe").get(userController.getMe);
 
