@@ -16,6 +16,8 @@ import Signup from "../features/user/Signup";
 import Account from "../features/user/Account";
 import AccountDetails from "../features/user/AccountDetails";
 import ProtectedRoute from "../components/ProtectedRoute";
+import Reviews from "../features/user/Reviews";
+import Bookings from "../features/user/Bookings";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -68,6 +70,14 @@ function App() {
               element: <Navigate to="settings" replace />,
               index: true,
             },
+            {
+              path:"reviews",
+              element:<Reviews/>
+            },
+            {
+              path:"bookings",
+              element:<Bookings/>
+            }
           ],
         },
       ],

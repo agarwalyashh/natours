@@ -1,7 +1,6 @@
 const User = require("../models/userModels");
 const AppError = require("../utils/error");
 const jwt = require("jsonwebtoken");
-const sendEmail = require("../utils/email");
 const crypto = require("crypto");
 
 exports.signup = async (req, res, next) => {

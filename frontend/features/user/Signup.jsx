@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { toastStyles } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { signupUser } from "../../services/apiAuth";
+import { signupUser, welcomeEmail } from "../../services/apiAuth";
 
 function Signup() {
   const [email, setEmail] = useState("");
@@ -11,6 +11,10 @@ function Signup() {
   const [passwordConfirm, setCpassword] = useState("");
   const [name,setName] = useState("")
   const navigate = useNavigate()
+  
+  function sendWelcomeEmail(){
+    welcomeEmail({email,name})
+  }
   async function handleSubmit(e){
     e.preventDefault();
     mutate({email,password,name,passwordConfirm})
@@ -22,6 +26,7 @@ function Signup() {
       console.log("Signup successful");
       toast.success("Signup successfull!",toastStyles);
       queryClient.invalidateQueries({ queryKey: ["login"] });
+      sendWelcomeEmail()
       navigate("/")
     },
     onError:(err)=>{

@@ -72,13 +72,13 @@ function AccountDetails() {
               type="text"
               id="name"
               required
-              className="border-2 border-gray-300 p-1 sm:p-2 rounded-lg w-70 md:w-80 focus:outline-none"
+              className="border-2 border-gray-300 p-1 sm:p-2 rounded-lg w-60 md:w-80 focus:outline-none"
               placeholder="Enter your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-          <div className="flex items-center justify-between">
+          <div className="md:flex items-center justify-between gap-2 sm:gap-0">
           <button
             type="submit"
             className="p-1 sm:p-2 rounded-full text-white bg-secondary-green focus:outline-none hover:bg-primary-green-hover cursor-pointer mb-5"

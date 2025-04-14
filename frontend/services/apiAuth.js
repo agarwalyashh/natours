@@ -68,3 +68,16 @@ export async function signupUser(formData) {
   }
   return await res.json();
 }
+
+export async function welcomeEmail(data){
+  const res = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/api/v1/emails`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+      credentials: "include",
+    }
+  );
+  return await res.json();
+}
