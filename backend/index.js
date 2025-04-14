@@ -8,6 +8,7 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
 const cors = require("cors");
+const compression = require("compression");
 const cookieParser = require("cookie-parser");
 const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
@@ -48,10 +49,10 @@ app.use(
   })
 );
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
 
+app.use(compression())
 app.use((req, res, next) => {
-  console.log(req.cookies);
   next();
 });
 

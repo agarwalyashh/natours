@@ -3,7 +3,6 @@ import logo from "../../public/img/logo-green-round.png"
 import { useAuth } from "../../context/authContext"
 function TourFooter() {
   const user = useAuth()
-  console.log(user)
   const navigate = useNavigate()
   return (
     <div className="rounded-lg bg-white shadow-lg w-fit shadow-gray-200 my-6 lg:my-10 flex gap-4 sm:gap-6 lg:gap-8 items-center p-4 lg:p-6 mx-auto">

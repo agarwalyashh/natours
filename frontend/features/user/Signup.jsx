@@ -23,14 +23,12 @@ function Signup() {
   const { mutate } = useMutation({
     mutationFn: (data)=>signupUser(data),
     onSuccess: () => {
-      console.log("Signup successful");
       toast.success("Signup successfull!",toastStyles);
       queryClient.invalidateQueries({ queryKey: ["login"] });
       sendWelcomeEmail()
       navigate("/")
     },
     onError:(err)=>{
-      console.log(err)
       toast.error(err.message,toastStyles)
     }
   });

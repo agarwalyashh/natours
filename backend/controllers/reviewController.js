@@ -12,7 +12,6 @@ exports.getAllReviews = async (req, res, next) => {
         queryObj = JSON.parse(queryStr);
         Object.assign(filter, queryObj);
     }
-    console.log(filter)
     const reviews = await Review.find(filter)
       .populate({
         path: "user",

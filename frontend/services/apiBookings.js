@@ -13,7 +13,6 @@ export async function createBooking(data){
         const jsonResponse = await res.json();
         return {status:"success",data:jsonResponse.data.booking};
       } catch (err) {
-        console.log(err);
         return {status:"error",message:err.message}
       }
 }
@@ -31,7 +30,6 @@ export async function getBookings() {
     const jsonResponse = await res.json();
     return jsonResponse.data.bookings;
   } catch (err) {
-    console.log(err);
     return null;
   }
 }

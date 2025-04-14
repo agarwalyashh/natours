@@ -31,7 +31,6 @@ export async function logoutUser() {
 }
 
 export async function isLoggedIn() {
-  try {
     const res = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/api/v1/users/isLoggedIn`,
       {
@@ -47,9 +46,6 @@ export async function isLoggedIn() {
 
     const data = await res.json();
     return { user: data.user };
-  } catch (error) {
-    console.error("Error checking login status:", error.message);
-  }
 }
 
 export async function signupUser(formData) {
@@ -95,7 +91,6 @@ export async function forgotPassword(formData) {
     );
     if (!res.ok) {
       const errorData = await res.json();
-      console.log(errorData)
       return {
         status: "error",
         message: errorData.message || "Failed to reset password",
@@ -103,7 +98,6 @@ export async function forgotPassword(formData) {
     }
     return await res.json();
   } catch (err) {
-    console.log(err)
     return { status: "error", message: err.message || "Something went wrong" };
   }
 }
@@ -121,7 +115,6 @@ export async function resetPassword(formData) {
     );
     if (!res.ok) {
       const errorData = await res.json();
-      console.log(errorData)
       return {
         status: "error",
         message: errorData.message || "Failed to reset password",
@@ -129,7 +122,6 @@ export async function resetPassword(formData) {
     }
     return await res.json();
   } catch (err) {
-    console.log(err)
     return { status: "error", message: err.message || "Something went wrong" };
   }
 }

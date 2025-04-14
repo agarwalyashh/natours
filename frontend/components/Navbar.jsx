@@ -13,7 +13,6 @@ function Navbar() {
   const { mutate } = useMutation({
     mutationFn: logoutUser,
     onSuccess: () => {
-      console.log("Logout successful");
       toast.success("Logged out!",toastStyles);
       queryClient.invalidateQueries({ queryKey: ["login"] });
       navigate("/")

@@ -11,7 +11,6 @@ function Bookings() {
   const { user } = useAuth();
   if (isLoading) return <Loading />;
   const userBookings = data?.filter((booking) => booking.user._id === user._id);
-  console.log(userBookings);
   return (
     <main className="p-10 md:p-14">
       <div className="flex flex-wrap gap-4">

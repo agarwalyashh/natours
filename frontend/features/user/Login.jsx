@@ -20,7 +20,6 @@ function Login() {
   const { mutate } = useMutation({
     mutationFn: (data)=>loginUser(data),
     onSuccess: () => {
-      console.log("Login successful");
       toast.success("Login successfull!",toastStyles);
       queryClient.invalidateQueries({ queryKey: ["login"] });
       navigate("/")

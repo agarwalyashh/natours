@@ -11,7 +11,6 @@ export async function getTours() {
     const jsonResponse = await res.json();
     return jsonResponse.data.tours;
   } catch (err) {
-    console.log(err);
     return null;
   }
 }
@@ -29,7 +28,6 @@ export async function getTour(id) {
     const jsonResponse = await res.json();
     return jsonResponse.data.tour;
   } catch (err) {
-    console.log(err);
     return null;
   }
 }

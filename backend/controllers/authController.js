@@ -50,7 +50,6 @@ exports.logout = async (req, res, next) => {
     });
     res.status(200).json({ status: "success" });
   } catch (err) {
-    console.log(err);
     next(new AppError(err.message, 400, err));
   }
 };
@@ -212,7 +211,7 @@ exports.forgotPassword = async (req, res, next) => {
     const resetToken = user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });
     // 3. Send it to user's email
-    const resetURL = `${req.protocol}://localhost:5173/resetPassword/${resetToken}`;
+    const resetURL = `${process.env.FRONTEND_URL}/resetPassword/${resetToken}`;
     try {
       const html = await render(
         React.createElement(forgotPassword, {
