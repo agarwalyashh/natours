@@ -72,12 +72,12 @@ reviewSchema.post("save", function () {
   this.constructor.calcAverageRatings(this.tour); // this.contructor is used instead of Review as Review is defined below
 });
 
-reviewSchema.pre("/^findOneAnd/", async function (next) {
+reviewSchema.pre(/^findOneAnd/, async function (next) {
   // This is query middleware in which this points to query and not document
   this.r = await this.findOne(); // This way we get the document
   next();
 });
-reviewSchema.post("findOneAnd", async function () {
+reviewSchema.post(/^findOneAnd/, async function () {
   // We can't do this.findOne() here as we are in post,query has already been executed
   await this.r.constructor.calcAverageRatings(this.r.tour);
 });

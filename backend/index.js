@@ -13,6 +13,7 @@ const tourRouter = require("./routes/tourRoutes");
 const userRouter = require("./routes/userRoutes");
 const emailRouter = require("./routes/emailRoutes");
 const reviewRouter = require("./routes/reviewRoutes");
+const bookingRouter = require("./routes/bookingRoutes");
 
 const app = express();
 
@@ -58,6 +59,7 @@ app.use("/api/v1/tours", tourRouter); // Called Mounting a new router on a route
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/reviews", reviewRouter);
 app.use("/api/v1/emails", emailRouter);
+app.use("/api/v1/bookings", bookingRouter);
 
 // If we reach here, means no response was sent till now, therefore there might be somethign wrong with the route
 app.all("*", (req, res, next) => {

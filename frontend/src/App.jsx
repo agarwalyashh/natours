@@ -19,6 +19,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import Reviews from "../features/user/Reviews";
 import Bookings from "../features/user/Bookings";
 import ResetPassword from "../features/user/ResetPassword";
+import TourBooking from "../features/tour/TourBooking";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +43,14 @@ function App() {
         {
           path: "tours/:tourId",
           element: <TourDetails />,
+        },
+        {
+          path: "tours/:tourId/booking",
+          element: (
+            <ProtectedRoute>
+              <TourBooking />
+            </ProtectedRoute>
+          ),
         },
         {
           element: <Navigate to="tours" replace />,
@@ -76,13 +85,13 @@ function App() {
               index: true,
             },
             {
-              path:"reviews",
-              element:<Reviews/>
+              path: "reviews",
+              element: <Reviews />,
             },
             {
-              path:"bookings",
-              element:<Bookings/>
-            }
+              path: "bookings",
+              element: <Bookings />,
+            },
           ],
         },
       ],

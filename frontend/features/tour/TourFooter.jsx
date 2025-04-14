@@ -12,6 +12,7 @@ function TourFooter() {
         <h1 className="uppercase text-green-600 font-semibold text-sm sm:text-lg md:text-xl xl:text-2xl">What are you waiting for?</h1>
         <p className="text-xs sm:text-sm lg:text-lg">Infinite memories, make it yours today!</p> 
       </div>
+      {user.user && <button className="uppercase rounded-full px-2 md:px-3 xl:px-4 py-1 sm:py-2 text-[10px] sm:text-xs lg:text-lg bg-primary-green text-white cursor-pointer hover:bg-primary-green-hover" onClick={()=>navigate("booking")}>Book tour now</button>}
       {!user.user && <button className="uppercase rounded-full px-2 md:px-3 xl:px-4 py-1 sm:py-2 text-[10px] sm:text-xs lg:text-lg bg-primary-green text-white cursor-pointer hover:bg-primary-green-hover" onClick={()=>navigate("/login")}>Login to book tour</button>}
     </div>
   )
