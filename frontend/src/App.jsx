@@ -18,6 +18,7 @@ import AccountDetails from "../features/user/AccountDetails";
 import ProtectedRoute from "../components/ProtectedRoute";
 import Reviews from "../features/user/Reviews";
 import Bookings from "../features/user/Bookings";
+import ResetPassword from "../features/user/ResetPassword";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,6 +50,10 @@ function App() {
         {
           path: "login",
           element: <Login />,
+        },
+        {
+          path: "resetPassword/:id",
+          element: <ResetPassword />,
         },
         {
           path: "signup",

@@ -69,7 +69,7 @@ export async function signupUser(formData) {
   return await res.json();
 }
 
-export async function welcomeEmail(data){
+export async function welcomeEmail(data) {
   const res = await fetch(
     `${import.meta.env.VITE_API_BASE_URL}/api/v1/emails`,
     {
@@ -80,4 +80,56 @@ export async function welcomeEmail(data){
     }
   );
   return await res.json();
+}
+
+export async function forgotPassword(formData) {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/api/v1/users/forgotPassword`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      }
+    );
+    if (!res.ok) {
+      const errorData = await res.json();
+      console.log(errorData)
+      return {
+        status: "error",
+        message: errorData.message || "Failed to reset password",
+      };
+    }
+    return await res.json();
+  } catch (err) {
+    console.log(err)
+    return { status: "error", message: err.message || "Something went wrong" };
+  }
+}
+
+export async function resetPassword(formData) {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/api/v1/users/resetPassword/${formData.token}`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include",
+      }
+    );
+    if (!res.ok) {
+      const errorData = await res.json();
+      console.log(errorData)
+      return {
+        status: "error",
+        message: errorData.message || "Failed to reset password",
+      };
+    }
+    return await res.json();
+  } catch (err) {
+    console.log(err)
+    return { status: "error", message: err.message || "Something went wrong" };
+  }
 }

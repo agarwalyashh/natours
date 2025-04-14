@@ -4,6 +4,7 @@ import { loginUser } from "../../services/apiAuth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { toastStyles } from "../../utils/helper";
+import ForgotPassword from "./ForgotPassword";
 
 function Login() {
   const location = useLocation();
@@ -29,8 +30,9 @@ function Login() {
     }
   });
 
-
+  const [modal,setModal] = useState(false);
   return (
+    <>
     <form className="bg-white p-5 md:p-8 xl:p-10 shadow-md rounded-lg flex flex-col justify-center w-[90%] sm:w-fit mx-auto gap-4 my-[5%]" onSubmit={handleSubmit}>
       <h1 className="text-lg sm:text-xl lg:text-2xl uppercase text-green-600 font-semibold">
         {location.pathname === "/login"
@@ -65,11 +67,13 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)} 
         />
       </div>
-      
+      <p className="text-right text-blue-600 underline hover:text-blue-800 cursor-pointer" onClick={()=>setModal(true)}>Forgot Password?</p>
       <button type="submit" className="uppercase bg-secondary-green hover:bg-primary-green cursor-pointer rounded-sm w-fit text-white p-2 md:px-4 md:py-2">
         {location.pathname === "/login" ? "Log in" : "Sign up"}
       </button>
     </form>
+    {modal && <ForgotPassword setModal={setModal}/>}
+    </>
   );
 }
 

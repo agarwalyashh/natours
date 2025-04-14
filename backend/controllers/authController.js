@@ -2,6 +2,13 @@ const User = require("../models/userModels");
 const AppError = require("../utils/error");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const { render } = require("@react-email/render");
+const resendKey = process.env.RESEND_API_KEY;
+const { Resend } = require("resend");
+const React = require("react");
+const forgotPassword = require("../emails/forgotPassword");
+
+const resend = new Resend(resendKey);
 
 exports.signup = async (req, res, next) => {
   try {
@@ -35,19 +42,18 @@ exports.signup = async (req, res, next) => {
   }
 };
 
-exports.logout = async (req,res,next)=>{
-  try{
-    res.cookie("jwt","loggedOut",{
+exports.logout = async (req, res, next) => {
+  try {
+    res.cookie("jwt", "loggedOut", {
       expires: new Date(Date.now() + 10 * 1000),
       httpOnly: true,
-    })
-    res.status(200).json({status:"success"})
+    });
+    res.status(200).json({ status: "success" });
+  } catch (err) {
+    console.log(err);
+    next(new AppError(err.message, 400, err));
   }
-  catch(err){
-    console.log(err)
-    next(new AppError(err.message,400,err))
-  }
-}
+};
 
 exports.login = async (req, res, next) => {
   try {
@@ -132,8 +138,8 @@ exports.isLoggedIn = async (req, res, next) => {
   try {
     if (!req.cookies.jwt) {
       return res.status(200).json({
-        status: 'success',
-        isLoggedIn: false
+        status: "success",
+        isLoggedIn: false,
       });
     }
 
@@ -151,35 +157,35 @@ exports.isLoggedIn = async (req, res, next) => {
 
     if (!decoded) {
       return res.status(200).json({
-        status: 'success',
-        isLoggedIn: false
+        status: "success",
+        isLoggedIn: false,
       });
     }
 
     const currentUser = await User.findById(decoded.id);
     if (!currentUser) {
       return res.status(200).json({
-        status: 'success',
-        isLoggedIn: false
+        status: "success",
+        isLoggedIn: false,
       });
     }
 
     if (currentUser.changedPasswordAfter(decoded.iat)) {
       return res.status(200).json({
-        status: 'success',
-        isLoggedIn: false
+        status: "success",
+        isLoggedIn: false,
       });
     }
 
     return res.status(200).json({
-      status: 'success',
+      status: "success",
       isLoggedIn: true,
-      user: currentUser
+      user: currentUser,
     });
   } catch (err) {
     return res.status(200).json({
-      status: 'success',
-      isLoggedIn: false
+      status: "success",
+      isLoggedIn: false,
     });
   }
 };
@@ -206,19 +212,24 @@ exports.forgotPassword = async (req, res, next) => {
     const resetToken = user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });
     // 3. Send it to user's email
-    const resetURL = `${req.protocol}://${req.get(
-      "host"
-    )}/api/v1/users/resetPassword/${resetToken}`;
-    const message = `Click this link to reset your password: ${resetURL}`;
+    const resetURL = `${req.protocol}://localhost:5173/resetPassword/${resetToken}`;
     try {
-      await sendEmail({
-        email: user.email,
-        subject: "Forgot Password",
-        message: message,
+      const html = await render(
+        React.createElement(forgotPassword, {
+          userFirstname: user.name.split(" ")[0],
+          resetPasswordLink: resetURL,
+        })
+      );
+      await resend.emails.send({
+        from: "onboarding@resend.dev", // must be verified in Resend
+        to: ["agarwalyashhh004@gmail.com"],
+        subject: "Reset your password",
+        html,
       });
+
       res.status(200).json({
         status: "success",
-        message: "Token sent to email",
+        message: "Reset token sent to email!",
       });
     } catch (err) {
       user.passwordResetToken = undefined;
