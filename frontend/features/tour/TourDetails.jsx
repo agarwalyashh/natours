@@ -39,7 +39,7 @@ function TourDetails() {
     location
   } = tour;
 
-  imageCover = "../public/img/tours/" + imageCover;
+  imageCover = "/img/tours/" + imageCover;
 
   return (
     <div className="mx-2">

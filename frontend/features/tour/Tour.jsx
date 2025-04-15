@@ -16,7 +16,7 @@ function Tour({ tour }) {
     startDates,
     location
   } = tour;
-  const image = `../public/img/tours/${imageCover}`;
+  const image = `/img/tours/${imageCover}`;
   const date = new Date(startDates[0]);
   const firstName = name.split(" ")[0] + " " + name.split(" ")[1];
   const lastName = name.split(" ")[2];

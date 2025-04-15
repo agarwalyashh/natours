@@ -31,7 +31,7 @@ function TourBooking() {
     }
   }
   if (isLoading) return <Loading />;
-  const image = `../../public/img/tours/${tour.imageCover}`;
+  const image = `/img/tours/${tour.imageCover}`;
   return (
     <div className="my-10 mx-auto w-[50%] space-y-6">
       <h1 className="uppercase text-green-500 text-center font-semibold text-xl sm:text-2xl md:text-3xl lg:text-4xl">
