@@ -9,7 +9,9 @@ function TourReviews({ reviews }) {
   });
   const {tourId} = useParams();
   const { user } = useAuth();
-  const userReview = reviews.filter((review) => review.user._id === user._id);
+  let userReview = []
+  if(user)
+    userReview = reviews.filter((review) => review.user._id === user._id);
   const [form, showForm] = useState(false);
   const [newReview,setReview] = useState("")
   const [rating,setRating] = useState("")
